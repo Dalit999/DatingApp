@@ -39,11 +39,12 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserToLoginDto userToLoginDto)
         {
+                      
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var userToLog = await _repo.Login(userToLoginDto.Username.ToLower(), userToLoginDto.Password);
             if(userToLog == null)
-                return Unauthorized();
+                return Unauthorized(); 
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userToLog.Id.ToString()),
