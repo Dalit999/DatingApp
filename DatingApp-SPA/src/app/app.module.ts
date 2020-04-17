@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
+import {TabsModule} from 'ngx-bootstrap/tabs';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -51,6 +52,7 @@ export function tokenGetter()
             blacklistedRoutes: ['localhost:5000/api/auth']
          }
       }),
+      TabsModule.forRoot(),
    ],
    providers: [
       ErrorInterceptorProvider,
