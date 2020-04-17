@@ -20,6 +20,8 @@ import { appRoutes } from './routes';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolvers/member-details.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 export function tokenGetter()
 {
@@ -56,7 +58,9 @@ export function tokenGetter()
    ],
    providers: [
       ErrorInterceptorProvider,
-      AuthService
+      AuthService,
+      MemberDetailResolver,
+      MemberListResolver,
    ],
    bootstrap: [
       AppComponent
