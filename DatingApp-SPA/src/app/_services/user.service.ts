@@ -30,5 +30,9 @@ updateUser(id:Number, user: User)
 {
   return this.http.put(this.baseUrl + 'users/' + id, user);
 }
+setMainPhoto(userId: Number, id:Number)
+{
+  return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain', {});
+}
 
 }
