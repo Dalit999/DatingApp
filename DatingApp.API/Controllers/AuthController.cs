@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
@@ -18,8 +19,10 @@ namespace DatingApp.API.Controllers
     {
         private IAuthRepository _repo;
         private readonly IConfiguration _configuration;
-        public AuthController(IAuthRepository repo, IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration configuration, IMapper mapper)
         {
+            _mapper = mapper;
             _configuration = configuration;
             _repo = repo;
         }
@@ -39,12 +42,12 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserToLoginDto userToLoginDto)
         {
-                      
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var userToLog = await _repo.Login(userToLoginDto.Username.ToLower(), userToLoginDto.Password);
-            if(userToLog == null)
-                return Unauthorized(); 
+            if (userToLog == null)
+                return Unauthorized();
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userToLog.Id.ToString()),
@@ -52,15 +55,19 @@ namespace DatingApp.API.Controllers
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor{
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new {
-                token = tokenHandler.WriteToken(token) //write out token into the response that we are sending back to the client
+            var user = _mapper.Map<UserForListDto>(userToLog);
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token), //write out token into the response that we are sending back to the client
+                user
             });
         }
 
