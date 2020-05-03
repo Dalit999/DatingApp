@@ -7,6 +7,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody]UserToRegisterDto userToRegisterDto)
         {
             if (!ModelState.IsValid)
@@ -35,11 +37,14 @@ namespace DatingApp.API.Controllers
             userToRegisterDto.Username = userToRegisterDto.Username.ToLower();
             if (await _repo.UserExists(userToRegisterDto.Username))
                 return BadRequest("user already exists");
-            var userToCreate = new User() { Username = userToRegisterDto.Username };
+            //var userToCreate = new User() { Username = userToRegisterDto.Username };
+            var userToCreate = _mapper.Map<User>(userToRegisterDto);
             var createdUser = await _repo.Register(userToCreate, userToRegisterDto.Password);
-            return StatusCode(201);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+            return CreatedAtRoute("GetUser", new {controller = "Users", id = createdUser.Id}, userToReturn);
         }
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(UserToLoginDto userToLoginDto)
         {
 

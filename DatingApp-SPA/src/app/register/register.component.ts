@@ -1,8 +1,10 @@
-import { Component, OnInit ,Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit , Input, Output, EventEmitter} from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyjsService } from '../_services/alertifyjs.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/ngx-bootstrap-datepicker';
+import { User } from '../_models/User';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -10,13 +12,13 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/ngx-bootstrap-datep
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  //@Input() valuesFromHome:any;
+  // @Input() valuesFromHome:any;
   @Output() cancelRegister = new EventEmitter();
-  model: any={};
+  user: User;
   registerForm: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private authService:AuthService, private alertifyjs:AlertifyjsService,
-    private fb: FormBuilder) { }
+  constructor(private authService: AuthService, private alertifyjs: AlertifyjsService,
+              private fb: FormBuilder, private router: Router) { }
 
   ngOnInit() {
     // this.registerForm = new FormGroup({
@@ -26,7 +28,7 @@ export class RegisterComponent implements OnInit {
     // },
     // this.passwordMatchValidator);
     this.bsConfig = {
-      containerClass:'theme-red'
+      containerClass: 'theme-red'
     };
     this.createRegisterForm();
   }
@@ -43,17 +45,26 @@ createRegisterForm(){
   }, {validator: this.passwordMatchValidator});
 }
   passwordMatchValidator(g: FormGroup){
-    return g.get('password').value === g.get('confirmPassword').value?
+    return g.get('password').value === g.get('confirmPassword').value ?
     null :
-    {'mismatch':true};
+    {mismatch: true};
   }
   register()
   {
+    if (this.registerForm.valid){
+      this.user = Object.assign({}, this.registerForm.value);
+      this.authService.register(this.user).subscribe(
+        () => this.alertifyjs.success('Registration Successful'),
+        (error) => this.alertifyjs.error(error),
+        () => this.authService.login(this.user).subscribe(
+                    () => this.router.navigate(['/members'])
+              )
+      );
+    }
     // this.authService.register(this.model).subscribe(
     //   ()=>this.alertifyjs.success('register successful'),
-    //   (error)=>this.alertifyjs.error(error) 
+    //   (error)=>this.alertifyjs.error(error)
     // );
-    console.log(this.registerForm.value);
   }
   cancel()
   {
