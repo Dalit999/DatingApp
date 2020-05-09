@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 
 namespace DatingApp.API.Data
@@ -9,7 +10,7 @@ namespace DatingApp.API.Data
          void Add<T>(T entry) where T: class;
          void Delete<T>(T entry) where T: class;
          Task<bool> SaveAll();//I thing he want to check if all changes were made to know if there was an error
-         Task<IEnumerable<User>> GetUsers();
+         Task<PagedList<User>> GetUsers(UserParams userParams);
          Task<User> GetUser(int id);
          Task<Photo> GetPhoto(int id);
          Task<Photo> GetMainPhotoForUser(int userId);

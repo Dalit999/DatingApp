@@ -9,6 +9,8 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {TabsModule} from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { TimeagoModule } from 'ngx-timeago';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -72,6 +74,8 @@ export function tokenGetter()
       }),
       TabsModule.forRoot(),
       TimeagoModule.forRoot(),
+      PaginationModule.forRoot(),
+      ButtonsModule.forRoot(),
    ],
    providers: [
       ErrorInterceptorProvider,
