@@ -25,7 +25,6 @@ likesParam: string;
   }
   loadUsers()
   {
-    console.log('in component, about to call get users');
     this.userService.getUsers(this.pagination.currentPage,this.pagination.itemsPerPage,null, this.likesParam).subscribe(
       (data:PaginatedResult<User[]>)=>{
       this.users = data.result;

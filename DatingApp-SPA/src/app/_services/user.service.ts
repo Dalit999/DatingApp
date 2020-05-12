@@ -39,9 +39,7 @@ getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginatedRe
     params = params.append('gender', userParams.gender);
     params = params.append('orderBy', userParams.orderBy);
   }
-  if(likesParam == null) {   console.log('likes param is null'); }
-  else {console.log('likes param is: ' + likesParam);}
-  if(likesParam === "Likers"){
+    if(likesParam === "Likers"){
     params = params.append('likers', 'true');
   }
   if(likesParam === "Likees"){
