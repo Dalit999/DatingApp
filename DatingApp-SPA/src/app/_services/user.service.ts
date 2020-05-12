@@ -23,7 +23,7 @@ constructor(private http: HttpClient) { }
 //   //return this.http.get<User[]>(this.baseUrl + 'users', httpOptions);//no need anymore, we configured JwtModule in app.module.ts to always send the token
 //   return this.http.get<User[]>(this.baseUrl + 'users');
 // }
-getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>>
+getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginatedResult<User[]>>
 {
   const paginatedResult = new PaginatedResult<User[]>();
   let params = new HttpParams();
@@ -39,7 +39,14 @@ getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>>
     params = params.append('gender', userParams.gender);
     params = params.append('orderBy', userParams.orderBy);
   }
-  
+  if(likesParam == null) {   console.log('likes param is null'); }
+  else {console.log('likes param is: ' + likesParam);}
+  if(likesParam === "Likers"){
+    params = params.append('likers', 'true');
+  }
+  if(likesParam === "Likees"){
+    params = params.append('likees', 'true');
+  }
   return this.http.get<User[]>(this.baseUrl + 'users', {observe:'response', params  })
   .pipe(
     map(response => {
@@ -71,4 +78,8 @@ deletePhoto(userId: Number, id:Number)
   return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id , {});
 }
 
+sendLike(id:number, recipientId: number)
+{
+  return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
+}
 }

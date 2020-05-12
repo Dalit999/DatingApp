@@ -33,6 +33,7 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { AuthGuard } from './_guards/auth.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ListsResolver } from './_resolvers/lists.resolver';
 
 export function tokenGetter()
 {
@@ -83,6 +84,7 @@ export function tokenGetter()
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
+      ListsResolver,
       AuthGuard,
       PreventUnsavedChanges,
    ],
