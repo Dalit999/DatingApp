@@ -132,13 +132,13 @@ public async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
            switch(messageParams.MessageContainer)
            {
                case "Inbox":
-                    messages = messages.Where(m => m.RecipientId == messageParams.UserId);
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && m.RecipientDeleted == false);
                     break;
                case "Outbox":
-                    messages = messages.Where(m => m.SenderId == messageParams.UserId);
+                    messages = messages.Where(m => m.SenderId == messageParams.UserId && m.SenderDeleted == false);
                     break;
                 default:
-                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && m.IsRead == false);
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && m.IsRead == false && m.RecipientDeleted == false);
                     break;
            }
            messages = messages.OrderByDescending(m => m.MessageSent);
@@ -150,7 +150,8 @@ public async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
             var messages = await _context.Messages
             .Include(m => m.Sender).ThenInclude(u => u.Photos)
             .Include(m => m.Recipient).ThenInclude(u => u.Photos)
-            .Where(m => (m.SenderId == userId && m.RecipientId == recipientId) || (m.SenderId == recipientId && m.RecipientId == userId))
+            .Where(m => (m.SenderId == userId && m.RecipientId == recipientId && m.SenderDeleted == false) || 
+            (m.SenderId == recipientId && m.RecipientId == userId && m.RecipientDeleted == false))
             .OrderByDescending(m => m.MessageSent)
             .ToListAsync();
            return messages;

@@ -34,6 +34,8 @@ import { AuthGuard } from './_guards/auth.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 export function tokenGetter()
 {
@@ -53,7 +55,7 @@ export function tokenGetter()
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-    
+      MemberMessagesComponent,
    ],
    imports: [
       BrowserModule,
@@ -85,6 +87,7 @@ export function tokenGetter()
       MemberListResolver,
       MemberEditResolver,
       ListsResolver,
+      MessagesResolver,
       AuthGuard,
       PreventUnsavedChanges,
    ],
